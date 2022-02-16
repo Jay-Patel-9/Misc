@@ -1,0 +1,38 @@
+#!/usr/bin/env python3
+alpha=['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']
+number=['0','1','2','3','4','5','6','7','8','9']
+decimal=['0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f']
+start_index=0
+consume_chars=8
+findnumber=1299
+
+for inum in range(1300):
+	if start_index >= consume_chars:
+		start_index = 0
+	#Part 1:
+	part1 = alpha[start_index:start_index+consume_chars]
+	total_extra_chars = consume_chars - len(part1)
+	if total_extra_chars>0:
+		extra_chars = alpha[0:total_extra_chars]
+		part1 = part1 + extra_chars
+
+	#Part 2:
+	part2 = number[start_index:start_index+consume_chars]
+	total_extra_chars = consume_chars - len(part2)
+	if total_extra_chars>0:
+		extra_chars = number[0:total_extra_chars]
+		part2 = part2 + extra_chars
+
+	#Part 3:
+	part3 = decimal[start_index:start_index+consume_chars]
+	total_extra_chars = consume_chars - len(part3)
+	if total_extra_chars>0:
+		extra_chars = decimal[0:total_extra_chars]
+		part3 = part3 + extra_chars
+
+	start_index = start_index + 1
+	# print("Iterate-Num:", inum)
+	if inum == findnumber:
+		# part1=''.join(part1)
+		print("User:", findnumber,"::",''.join(part1),'-',''.join(part2),'-',''.join(part3),'-',str(findnumber)+str(1337))
+		break
