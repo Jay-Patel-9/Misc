@@ -1,0 +1,33 @@
+#!/bin/bash
+set -e
+#declare required variables
+users="$1" #Take space separated usernames as script argument
+#users="test1 test2 test3 test4 test5" #Space separated usernames
+raw_password="SUPER_SECRET_PASSWORD"
+password=$(openssl passwd -1 $raw_password)
+groupname=GROUPNAMEHERE
+
+#create group
+sudo groupadd $groupname
+for i in $users; do 
+    echo "$i"
+    sudo useradd -m $i
+    sudo usermod -p $password $i
+    ssh-keygen -f $i -N ''
+    sudo mkdir /home/$i/.ssh/ ; sudo chown -R $i:$i /home/$i/.ssh/
+    sudo su $i -c "touch /home/$i/.ssh/authorized_keys"
+    sudo cp $i /home/$i/.ssh/id_rsa ; sudo su $i -c "cat $i.pub > /home/$i/.ssh/authorized_keys"
+    sudo chmod 0600 /home/$i/.ssh/id_rsa ; sudo chmod 644 /home/$i/.ssh/authorized_keys ; sudo chown -R $i:$i /home/$i/.ssh/
+    sudo usermod -a -G $groupname $i
+done
+
+#Add permission in sudoers
+echo """ 
+ADD BELOW LINES TO YOUR SUDOERS FILE
+#Giving specific permissions to YOUR group
+%GROUPNAMEHERE ALL=/usr/sbin/service
+
+#enable timestamp in linux history command
+Add below line to : /etc/bash.bashrc
+    - export HISTTIMEFORMAT='%F %T '
+"""
